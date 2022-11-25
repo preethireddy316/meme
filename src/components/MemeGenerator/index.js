@@ -1,6 +1,11 @@
+/* eslint-disable prettier/prettier */
+
+import {Component} from "react";
+
 import "./index.css"
 
-import "./styledComponents.js"
+import {Container} from "./styledComponents"
+
 const fontSizesOptionsList = [
   {
     optionId: '8',
@@ -33,39 +38,53 @@ const fontSizesOptionsList = [
 ]
 // Write your code here
 
-const MemeGenerator extends Component{
-    state={imgUrl:"",topText:"",bottomText:"",activeFontId:"",isGenerated:false}
+class MemeGenerator extends Component{
+    state={imgUrl:"",topText:"",bottomText:"",
+    activeFontId:fontSizesOptionsList[0].optionId,isGenerated:false}
 
     changeUrl = (event)=>{
-        this.setState(event.target.value)
+        this.setState({imgUrl : event.target.value})
     }
 
-    const generateImage=()=>{
+     generateImage=()=>{
         this.setState({isGenerated:true})
     }
 
+    top=(event)=>{
+        this.setState({topText:event.target.value})
+    }
+
+     bottom=(event)=>{
+        this.setState({bottomText:event.target.value})
+    }
+
+    fontChange=(event)=>{
+        this.setState({activeFontId:event.target.value})
+    }
+
 render(){
+    const {imgUrl,bottomText,topText,isGenerated,activeFontId} = this.state
     return(
         <>
         <div className="cont">
-            <div>
-            <h1>Meme Gene</h1>
+            <form onSubmit={this.generateImage}>
+            <h1>Meme Generator</h1>
             <label htmlFor="url">Image URL</label>
-            <input id="url" type="input"/>
+            <input id="url" type="input" onChange={this.changeUrl}/>
             <label htmlFor="top">Top Text</label>
-            <input id="top" type="input"/>
+            <input id="top" type="input" onChange={this.top}/>
             <label htmlFor="bottom">Bottom Text</label>
-            <input id="bottom" type="input"/>
-            <label htmlFor="font">Bottom Text</label>
+            <input id="bottom" type="input" onChange={this.bottom}/>
+            <label htmlFor="font">Font Size</label>
             <select id="font" value={activeFontId} onChange={this.fontChange}>
             {fontSizesOptionsList.map(each=>
             <option key={each.optionId}>{each.displayText}</option>)}    
             </select>
-            <button type="button" onClick={generateImage}>Generate</button>
-            </div>
-        {isGenerated&&<Container imgUrl={imgUrl} activeFontId={activeFontId}>
-                <p>top</p>
-                <p>bottom</p>
+            <button type="submit">Generate</button>
+            </form>
+        {isGenerated&&<Container data-testid="meme" imgUrl={imgUrl} activeFontId={activeFontId}>
+                <p>{topText}</p>
+                <p>{bottomText}</p>
         </Container>}
         </div>
         
